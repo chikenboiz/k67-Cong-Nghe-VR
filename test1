@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Sphere Viewer - Keypoints Navigation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/core@5/index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/markers-plugin@5/index.css">
+</head>
+<body>
+<div id="viewer" style="width: 100%; height: 100vh;"></div>
+
+<!-- Importmap để ánh xạ thư viện -->
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three/build/three.module.js",
+            "@photo-sphere-viewer/core": "https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/core@5/index.module.js",
+            "@photo-sphere-viewer/autorotate-plugin": "https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/autorotate-plugin@5/index.module.js",
+            "@photo-sphere-viewer/markers-plugin": "https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/markers-plugin@5/index.module.js"
+        }
+    }
+</script>
+
+<!-- Script module để sử dụng các thư viện đã ánh xạ -->
+<script type="module">
+    import {Viewer} from '@photo-sphere-viewer/core';
+    import {AutorotatePlugin} from '@photo-sphere-viewer/autorotate-plugin';
+    import {MarkersPlugin} from '@photo-sphere-viewer/markers-plugin';
+
+    const panoList = [
+        {
+            src: "img/ảnh 3.jpg",
+            default: {yaw: 0.748, pitch: -0.164},
+            zoom: 40, // zoom mặc định của ảnh pano
+            keypoints: [
+                {
+                   id: "key1",
+                    image: "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+                    position: {yaw: 0.80, pitch: 0.1335},
+                    zoom: 10,
+                    next_speed: "-1rpm",
+                    infoImage: "img/ảnh nội dung thư viện.jpg",
+                    description: "NỘI DUNG THƯ VIỆN"
+                },
+                {
+                   id: "key2",
+                    image: "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+                    position: {yaw: 1, pitch: 2},
+                    zoom: 10,
+                    next_speed: "-1rpm",
+                    infoImage: "img/ảnh nội dung thư viện.jpg",
+                    description: "NỘI DUNG THƯ VIỆN"
+                },
+                {
+                   id: "key3",
+                    image: "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+                    position: {yaw: 0.80, pitch: 0.1335},
+                    zoom: 10,
+                    next_speed: "-1rpm",
+                    infoImage: "img/ảnh nội dung thư viện.jpg",
+                    description: "NỘI DUNG THƯ VIỆN"
+                },
+            ]
+        },
+        {
+            src: "img/ảnh sảnh.jpg",
+            default: {yaw: 6.142, pitch: -0.123},
+            zoom: 35,
+            keypoints: [
+                {
+                    id: "key1",
+                    image: "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+                    position: {yaw: 6.142, pitch: -0.123},
+                    zoom: 10,
+                    next_speed: "-1rpm"
+                },
+                {
+                    id: "key2",
+                    image: "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+                    position: {yaw: 4.512, pitch: 0.108},
+                    zoom: 10,
+                    next_speed: "1rpm"
+                },
+                {
+                    id: "key3",
+                    image: "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+                    position: {yaw: 1.468, pitch: 0.05},
+                    zoom: 10,
+                    next_speed: "-1rpm"
+                },
+                {
+                    id: "key4",
+                    image: "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+                    position: {yaw: 6.116, pitch: 0.191},
+                    zoom: 50,
+                    next_speed: "end"
+                },
+            ]
+        },
+        {
+            src: "img/ảnh p đọc sách.jpg",
+            default: {yaw: 0.748, pitch: -0.164},
+            zoom: 40, // zoom mặc định của ảnh pano
+            keypoints: [
+                {
+                   id: "key1",
+                    image: "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+                    position: {yaw: 0.80, pitch: 0.1335},
+                    zoom: 10,
+                    next_speed: "-1rpm",
+                    infoImage: "img/ảnh nội dung thư viện.jpg",
+                    description: "ẢNH NỘI DUNG THƯ VIỆN"
+                },
+               
+            ]
+        },
+        {
+            src: "img/ảnh cầu thang.jpg",
+            default: {yaw: 0.748, pitch: -0.164},
+            zoom: 40, // zoom mặc định của ảnh pano
+            keypoints: [
+                {
+                   id: "key1",
+                    image: "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+                    position: {yaw: 0.80, pitch: 0.1335},
+                    zoom: 10,
+                    next_speed: "-1rpm",
+                    infoImage: "img/ảnh nội dung thư viện.jpg",
+                    description: "ẢNH NỘI DUNG THƯ VIỆN"
+                },
+               
+            ]
+        },
+        {
+            src: "img/ảnh cầu thang 2.jpg",
+            default: {yaw: 0.748, pitch: -0.164},
+            zoom: 40, // zoom mặc định của ảnh pano
+            keypoints: [
+                {
+                   id: "key1",
+                    image: "https://photo-sphere-viewer-data.netlify.app/assets/pictos/pin-red.png",
+                    position: {yaw: 0.80, pitch: 0.1335},
+                    zoom: 10,
+                    next_speed: "-1rpm",
+                    infoImage: "img/ảnh nội dung thư viện.jpg",
+                    description: "ẢNH NỘI DUNG THƯ VIỆN"
+                },
+               
+            ]
+        },
+    ];
+
+    let currentPanoIndex = 0;
+    let currentKeypointIndex = 0;
+
+    const viewer = new Viewer({
+        container: document.querySelector('#viewer'),
+        panorama: panoList[currentPanoIndex].src,
+        defaultYaw: panoList[currentPanoIndex].default.yaw,
+        defaultPitch: panoList[currentPanoIndex].default.pitch,
+        defaultZoomLvl: panoList[currentPanoIndex].zoom,
+        touchmoveTwoFingers: true,
+        navbar: 'autorotate zoom move caption fullscreen',
+
+        //navbar: [ // navbar custom
+        //    'autorotate',
+        //    'zoom',
+        //    {
+        //        id: 'previous-pano',
+        //        content: '⬅️',
+        //        title: 'Previous panorama',
+        //        onClick: () => {
+        //            currentPanoIndex = Math.max(0, currentPanoIndex - 1);
+        //            loadNextPano();
+        //        }
+        //    },
+        //    {
+        //        id: 'next-pano',
+        //        content: '➡️',
+        //        title: 'Next panorama',
+        //        onClick: () => {
+        //            currentPanoIndex = Math.min(panoList.length - 1, currentPanoIndex + 1);
+        //            loadNextPano();
+        //        }
+        //    },
+        //    {
+        //        id: 'custom-button',
+        //        content: '🎯',
+        //        title: 'Go to first keypoint',
+        //        onClick: () => {
+        //            currentKeypointIndex = 0;
+        //            moveToNextKeypoint();
+        //        }
+        //    },
+        //    {
+        //        id: 'custom-fullscreen',
+        //        content: '⛶',
+        //        title: 'Toggle Fullscreen',
+        //        onClick: () => {
+        //            const viewerContainer = document.querySelector('#viewer');
+        //            if (!document.fullscreenElement) {
+        //                viewerContainer.requestFullscreen().catch(err => {
+        //                    alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+        //                });
+        //            } else {
+        //                document.exitFullscreen();
+        //            }
+        //        }
+        //    }
+        //],
+
+        plugins: [
+            [AutorotatePlugin, {
+                autorotateSpeed: '1rpm',
+                autorotatePitch: '0.1',
+            }],
+            MarkersPlugin
+        ],
+    });
+
+    const markersPlugin = viewer.getPlugin(MarkersPlugin);
+    const autorotatePlugin = viewer.getPlugin(AutorotatePlugin);
+
+   function loadMarkers() {
+    const keypoints = panoList[currentPanoIndex].keypoints;
+    markersPlugin.clearMarkers();
+
+    keypoints.forEach((kp) => {
+        if (typeof kp.position.yaw !== 'number' || typeof kp.position.pitch !== 'number') {
+            console.error(`Invalid position for marker ${kp.id}`);
+            return;
+        }
+
+        const tooltipContent = `
+            <div style="text-align: center; max-width: 200px;">
+                <img src="${kp.infoImage}" alt="ảnh" style="width: 100%; border-radius: 6px; margin-bottom: 8px;">
+                <div style="color: #fff;">${kp.description}</div>
+            </div>
+        `;
+
+        markersPlugin.addMarker({
+            id: kp.id,
+            position: kp.position,
+            size: {width: 32, height: 32},
+            image: kp.image,
+            scale: [0.5, 1.5],
+            anchor: 'bottom center',
+            tooltip: {
+                content: tooltipContent,
+                className: 'custom-tooltip',
+                position: 'top',
+                trigger: 'hover',
+            }
+        });
+    });
+}
+
+
+
+    function zoomToFinalKeypoint() {
+        const keypoints = panoList[currentPanoIndex].keypoints;
+        const finalKeypoint = keypoints[keypoints.length - 1];
+
+        // Mức zoom ban đầu và các bước zoom
+        let currentZoom = finalKeypoint.zoom;
+        const zoomStep = 20; // Bước tăng zoom
+        const maxZoom = 100; // Tổng mức zoom tối đa có thể đạt được
+
+        // Tạo mảng các mức zoom cần thực hiện
+        const zoomSteps = [];
+        while (currentZoom + zoomStep <= maxZoom) {
+            currentZoom += zoomStep;
+            zoomSteps.push(currentZoom);
+        }
+
+        function performZoom(targetZoom) {
+            viewer.animate({
+                yaw: finalKeypoint.position.yaw,
+                pitch: finalKeypoint.position.pitch,
+                zoom: targetZoom,
+                speed: '0.5rpm', // Tốc độ zoom mượt mà
+                duration: 2000 // Thay đổi thời gian di chuyển
+            }).then(() => {
+                // Nếu còn mức zoom cần thực hiện
+                if (zoomSteps.length > 0) {
+                    const nextZoom = zoomSteps.shift(); // Lấy mức zoom tiếp theo
+                    performZoom(nextZoom); // Thực hiện zoom đến mức zoom tiếp theo
+                } else {
+                    // Sau khi zoom dần, load ảnh panorama tiếp theo
+                    currentKeypointIndex = 0;
+                    currentPanoIndex++;
+                    if (currentPanoIndex < panoList.length) {
+                        loadNextPano();
+                    } else {
+                        console.log('Hết ảnh panorama');
+                    }
+                }
+            });
+        }
+
+        // Bắt đầu zoom từ mức zoom hiện tại đến mức zoom đầu tiên trong danh sách zoomSteps
+        if (zoomSteps.length > 0) {
+            performZoom(zoomSteps.shift());
+        } else {
+            // Nếu không có bước zoom nào cần thực hiện, chuyển sang ảnh panorama tiếp theo
+            currentKeypointIndex = 0;
+            currentPanoIndex++;
+            if (currentPanoIndex < panoList.length) {
+                loadNextPano();
+            } else {
+                console.log('Hết ảnh panorama');
+            }
+        }
+    }
+
+    // Biến để kiểm soát việc áp dụng zoom vào keypoint cuối cùng
+    let applyZoomToFinalKeypoint = false; // Đặt thành false nếu không muốn áp dụng zoom
+
+    function moveToNextKeypoint() {
+        const keypoints = panoList[currentPanoIndex].keypoints;
+
+        // Nếu đã vượt qua tất cả các keypoint
+        if (currentKeypointIndex >= keypoints.length) {
+            if (applyZoomToFinalKeypoint) {
+                // Nếu áp dụng zoom vào keypoint cuối cùng, gọi hàm zoomToFinalKeypoint
+                zoomToFinalKeypoint();
+            } else {
+                // Nếu không áp dụng zoom, chuyển sang ảnh panorama tiếp theo
+                currentKeypointIndex = 0;
+                currentPanoIndex++;
+                if (currentPanoIndex < panoList.length) {
+                    loadNextPano();
+                } else {
+                    console.log('Hết ảnh panorama');
+                }
+            }
+            return;
+        }
+
+        const currentKeypoint = keypoints[currentKeypointIndex];
+
+        // Dừng xoay tự động
+        autorotatePlugin.stop();
+
+        // Di chuyển đến keypoint hiện tại
+        viewer.animate({
+            yaw: currentKeypoint.position.yaw,
+            pitch: currentKeypoint.position.pitch,
+            zoom: currentKeypoint.zoom, // Mỗi keypoint có mức zoom tùy chỉnh
+            speed: '2rpm',
+        }).then(() => {
+            // Thiết lập tốc độ xoay tự động
+            const nextSpeed = currentKeypoint.next_speed;
+            if (nextSpeed && typeof nextSpeed === 'string' && nextSpeed.match(/^[-]?\d+rpm$/)) {
+                autorotatePlugin.setOptions({autorotateSpeed: nextSpeed});
+            } else {
+                console.error(`Invalid next_speed value: ${nextSpeed}`);
+                autorotatePlugin.setOptions({autorotateSpeed: '1rpm'}); // Giá trị mặc định nếu không hợp lệ
+            }
+
+            // Nếu nextSpeed không phải là "end", tiếp tục xoay tự động
+            if (nextSpeed !== "end") {
+                autorotatePlugin.start();
+            }
+
+            // Di chuyển đến keypoint tiếp theo sau 5 giây
+            currentKeypointIndex++;
+            if (currentKeypointIndex < keypoints.length) {
+                setTimeout(moveToNextKeypoint, 7000);
+            } else {
+                // Nếu đã đến keypoint cuối cùng, đợi 1 giây rồi áp dụng zoom hoặc chuyển panorama
+                setTimeout(() => {
+                    if (applyZoomToFinalKeypoint) {
+                        zoomToFinalKeypoint();
+                    } else {
+                        currentKeypointIndex = 0;
+                        currentPanoIndex++;
+                        if (currentPanoIndex < panoList.length) {
+                            loadNextPano();
+                        } else {
+                            console.log('Hết ảnh panorama');
+                        }
+                    }
+                }, 5000);
+            }
+        });
+    }
+
+    function loadNextPano() {
+        viewer.setPanorama(
+            panoList[currentPanoIndex].src, {
+                position: {
+                    yaw: panoList[currentPanoIndex].default.yaw,
+                    pitch: panoList[currentPanoIndex].default.pitch
+                },
+                zoom: panoList[currentPanoIndex].zoom
+            }).then(() => {
+            loadMarkers();
+            // Đợi 1 giây trước khi thực hiện chuyển zoom mượt mà
+            setTimeout(() => {
+                // Xác định mức zoom mới thấp hơn để chuyển đến
+                // const targetZoom = Math.max(panoList[currentPanoIndex].zoom - 20, 10); // Giảm zoom ít nhất là 10
+                const targetZoom = panoList[currentPanoIndex].keypoints[0].zoom;
+
+                // Chuyển zoom mượt mà đến mức zoom thấp hơn
+                viewer.animate({
+                    yaw: panoList[currentPanoIndex].default.yaw,
+                    pitch: panoList[currentPanoIndex].default.pitch,
+                    zoom: targetZoom,
+                    speed: '0.5rpm', // Tốc độ di chuyển thấp hơn để mượt mà hơn
+                    duration: 4000 // Thời gian di chuyển lâu hơn để kiểm soát tốc độ và độ mượt
+                }).then(() => {
+                    // Sau khi hoàn tất chuyển zoom, tiếp tục với keypoint
+                    moveToNextKeypoint();
+                });
+            }, 5000); // Đợi 5 giây
+        });
+    }
+
+    // Hàm tải trước (pre-fetch) các panorama
+    function prefetchPanoramas() {
+        panoList.forEach((pano, index) => {
+            if (index === currentPanoIndex) return; // Không tải lại panorama hiện tại
+
+            const img = new Image();
+            img.src = pano.src;
+            img.onload = () => {
+                console.log(`Preloaded panorama ${pano.src}`);
+            };
+        });
+    }
+
+    // Hàm tải trước (pre-fetch) các keypoints
+    function prefetchKeypoints() {
+        panoList.forEach(pano => {
+            pano.keypoints.forEach(keypoint => {
+                const img = new Image();
+                img.src = keypoint.image;
+                img.onload = () => {
+                    console.log(`Prefetched keypoint image ${keypoint.image}`);
+                };
+            });
+        });
+    }
+
+    // Gọi các hàm prefetch khi khởi tạo
+    prefetchPanoramas();
+    prefetchKeypoints();
+
+    // Bắt đầu với ảnh pano đầu tiên
+    loadMarkers();
+    moveToNextKeypoint();
+
+</script>
+</body>
+</html>
